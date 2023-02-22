@@ -1,5 +1,5 @@
 package com.enums;
 
 public enum Author {
-    CHINMAY, NIKHIL;
+    CHINMAY, ANKITA,NEELESH;
 }
