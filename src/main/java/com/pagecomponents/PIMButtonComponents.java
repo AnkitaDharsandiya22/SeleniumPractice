@@ -1,4 +1,4 @@
-package com.pages;
+package com.pagecomponents;
 
 import org.openqa.selenium.devtools.v85.layertree.model.StickyPositionConstraint;
 

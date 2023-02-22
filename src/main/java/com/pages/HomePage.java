@@ -2,6 +2,8 @@ package com.pages;
 
 import com.base.BasePage;
 import com.enums.Waits;
+import com.pagecomponents.LeftMenuBarComponents;
+import com.pagecomponents.ProfileComponents;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -36,7 +38,7 @@ public class HomePage extends BasePage {
     }
 
     public HomePage selectMenu(LeftMenuBarComponents menu) {
-        clickElementUnderListByText(MENU_ITEMS, Waits.VISIBLITY, "span", menu.getMenuName());
+        selectDesiredOption(MENU_ITEMS, Waits.VISIBLITY, menu.getMenuName());
         return this;
     }
 }

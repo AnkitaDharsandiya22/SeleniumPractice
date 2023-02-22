@@ -260,9 +260,9 @@ public class BasePage {
         return body.getText().contains(specialCharAsString);
     }
 
-    public boolean isElementPresent(By locator) {
+    public boolean isElementPresent(By locator,Waits waits) {
         try {
-            WebElement element = getDriver().findElement(locator);
+            WebElement element = getElement(locator,waits);
             return element != null;
         } catch (NoSuchElementException e) {
             return false;

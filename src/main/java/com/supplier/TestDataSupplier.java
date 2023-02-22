@@ -29,6 +29,26 @@ public class TestDataSupplier {
     @Column(name = "ExpectedURL", index = 9)
     private String ExpectedURL;
 
+    public String getFirstName() {
+        return FirstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public String getEmployeeId() {
+        return EmployeeId;
+    }
+
+    @Column(name = "FirstName", index = 10)
+    private String FirstName;
+    @Column(name = "LastName", index = 11)
+    private String LastName;
+    @Column(name = "EmployeeId", index = 12)
+    private String EmployeeId;
+
+
     public String getTestcase() {
         return TestCase;
     }
