@@ -29,8 +29,7 @@ public class PIMPageTests extends BaseTest {
                 .selectMenu(LeftMenuBarComponents.PIM);
         usePIMPage()
                 .clickButton(PIMButtonComponents.ADD)
-                .enterFirstname(dataSupplier.getFirstName())
-                .enterLastname(dataSupplier.getLastName())
+                .enterEmployeeName(dataSupplier.getFirstName(),dataSupplier.getLastName())
                 .enterEmployeeId(dataSupplier.getEmployeeId())
                 .clickSaveButton();
         boolean user = usePIMPage().isUserSuccessfullySaved();
