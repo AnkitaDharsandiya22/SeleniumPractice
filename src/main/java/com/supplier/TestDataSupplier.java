@@ -32,7 +32,6 @@ public class TestDataSupplier {
     public String getFirstName() {
         return FirstName;
     }
-
     public String getLastName() {
         return LastName;
     }

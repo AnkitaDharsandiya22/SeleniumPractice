@@ -1,0 +1,11 @@
+
+--using xpath
+var v = document.evaluate("//input[@name='firstName']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+v.value="Ankita";
+
+--using name to check send keys sending or not
+document.querySelector('input[name="firstName"]').value="Jaineel";
+
+--using xpath click action
+var a = document.evaluate("xpath", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+a.click();

@@ -1,5 +1,6 @@
 package com.base;
 
+import com.driver.DriverManager;
 import com.enums.Waits;
 import com.github.javafaker.Faker;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -8,6 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +66,17 @@ public class BasePage {
         info("<b>" + elementName + "</b> is clicked");
     }
 
+    protected static void clickUsingAction(By by, Waits waits, String elementName) {
+        Actions act = new Actions(DriverManager.getDriver());
+        act.moveToElement(getElement(by, waits)).click().perform();
+        info("<b>" + elementName + "</b> is clicked");
+    }
+
     protected static void sendKeys(By by, Waits waits, String value, String field) {
         WebElement element = waitForElement(by, waits);
         element.clear();
+
+
         element.sendKeys(value);
         String text = element.getText();
         if (text.isEmpty()) {
@@ -260,9 +271,9 @@ public class BasePage {
         return body.getText().contains(specialCharAsString);
     }
 
-    public boolean isElementPresent(By locator,Waits waits) {
+    public boolean isElementPresent(By locator, Waits waits) {
         try {
-            WebElement element = getElement(locator,waits);
+            WebElement element = getElement(locator, waits);
             return element != null;
         } catch (NoSuchElementException e) {
             return false;
@@ -354,4 +365,15 @@ public class BasePage {
         WebElement element = getElement(locator, waits);
         actions.clickAndHold(element).perform();
     }
+
+    public static String getAttributeText(By locator, Waits waits) {
+        WebElement element = getElement(locator, waits);
+        return element.getAttribute("value");
+    }
+
+    public static String getElementText(By locator, Waits waits) {
+        WebElement element = getElement(locator, waits);
+        return element.getText();
+    }
+
 }
