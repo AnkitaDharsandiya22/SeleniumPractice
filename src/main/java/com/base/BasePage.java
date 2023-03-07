@@ -24,8 +24,7 @@ import java.util.Random;
 
 import static com.constants.FrameworkConstants.*;
 import static com.driver.DriverManager.getDriver;
-import static com.factories.WaitFactory.waitForElement;
-import static com.factories.WaitFactory.waitForElements;
+import static com.factories.WaitFactory.*;
 import static com.reports.ReportsLogger.info;
 import static com.utils.UsefulFunctionsUtils.waitForPageLoaded;
 
@@ -72,11 +71,14 @@ public class BasePage {
         info("<b>" + elementName + "</b> is clicked");
     }
 
+    protected static void clearTextBox(By by,Waits waits){
+        WebElement element = waitForElement(by, waits);
+        element.sendKeys(Keys.chord(Keys.CONTROL+"a"));
+        element.sendKeys(Keys.DELETE);
+    }
+
     protected static void sendKeys(By by, Waits waits, String value, String field) {
         WebElement element = waitForElement(by, waits);
-        element.clear();
-
-
         element.sendKeys(value);
         String text = element.getText();
         if (text.isEmpty()) {
@@ -85,6 +87,13 @@ public class BasePage {
             info("Filling <b>" + value + "</b> in <b>" + element.getText() + "</b>");
         }
     }
+    protected static void sendKeysUsingAction(By by, Waits waits, String value, String field) {
+        Actions act = new Actions(getDriver());
+        act.moveToElement(getElement(by,waits)).click().sendKeys(value).build().perform();
+        info("Filling <b>" + value + "</b> in <b>" + field + "</b>");
+    }
+
+
 
     public static void sendKeysOneCharAtATime(WebElement element, String text) {
         for (int i = 0; i < text.length(); i++) {
@@ -368,7 +377,7 @@ public class BasePage {
 
     public static String getAttributeText(By locator, Waits waits) {
         WebElement element = getElement(locator, waits);
-        return element.getAttribute("value");
+        return waitForAttribute(element);
     }
 
     public static String getElementText(By locator, Waits waits) {

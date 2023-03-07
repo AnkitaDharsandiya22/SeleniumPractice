@@ -11,6 +11,8 @@
             <class name="com.tests.LoginPageTests"/>
             <class name="com.tests.PIMPageTests"/>
             <class name="com.tests.MyInfoTests"/>
+            <class name="com.tests.ProductStoreSignUpTests"/>
+            <class name="com.tests.ProductStoreLoginTests"/>
         </classes>
     </test>
 </suite>

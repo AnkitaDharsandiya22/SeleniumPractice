@@ -66,4 +66,12 @@ public class WaitFactory {
         highlightElement(element);
         return element;
     }
+    public static String waitForAttribute(WebElement element) {
+        WebDriverWait wait = new WebDriverWait(getDriver(),Duration.ofSeconds(20));
+        boolean value = wait.until(ExpectedConditions.attributeToBeNotEmpty(element,"value"));
+        return value ? element.getAttribute("value") :null ;
+
+
+    }
+
 }
