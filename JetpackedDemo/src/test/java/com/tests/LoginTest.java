@@ -8,6 +8,8 @@ import com.supplier.SupplierReader;
 import com.supplier.TestDataSupplier;
 import org.testng.annotations.Test;
 
+import static com.pages.LoginPage.first;
+import static com.pages.LoginPage.then;
 import static com.pages.LoginPage.useLoginPage;
 import static com.utils.VerificationUtils.validate;
 public class LoginTest extends BaseTest {
@@ -15,7 +17,7 @@ public class LoginTest extends BaseTest {
     @Test(dataProvider = "getDataFromExcel",dataProviderClass = SupplierReader.class)
     @TestDescription(description = "To test user is able to Login",author = Author.ANKITA,category = Category.SANITY)
     void testLogin(TestDataSupplier dataSupplier){
-       useLoginPage().clickOnCleverBtn()
+       first().clickOnCleverBtn().then()
                .performLogin(dataSupplier.getUsername(),dataSupplier.getPassword());
        boolean flag =  useLoginPage().verifyLogin();
        validate(flag,true,"Welcome Verified");

@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class HomePage extends BasePage {
-    private final By SIDE_MENU = By.xpath("//ul[@class='nav flex-column pmd-sidebar-nav']//li//span");
+    private final String SIDE_MENU = "//li[@pmdtooltip='%s']";
     private final By LBL_SCHOOL = By.xpath("//button[@id='burgerMenuId']/following::h1[1]");
     private final By NAVIGATION_LINK = By.xpath("//div[@class='pmd-breadcrumb-section has-subtitle']//li");
 
@@ -18,7 +18,7 @@ public class HomePage extends BasePage {
     }
 
     public HomePage clickOnSchools(SidemenuComponents sideMenu) {
-      click(SIDE_MENU,Waits.PRESENCE,"Schools");
+       click(generateDynamicByLocator(SIDE_MENU,sideMenu.getSideMenu()),Waits.PRESENCE,"Schools");
         return this;
     }
 
@@ -26,7 +26,7 @@ public class HomePage extends BasePage {
         return isElementPresent(LBL_SCHOOL, Waits.PRESENCE);
     }
 
-    public boolean verifySchoolsNavigation(String value) {
+    public boolean verifySchoolsNavigation(SidemenuComponents value) {
         List<WebElement> dropdownOptions = getElements(NAVIGATION_LINK, Waits.PRESENCE);
         for (WebElement dropdownOption : dropdownOptions) {
             if (dropdownOption.getText().equals(value)) {

@@ -6,19 +6,20 @@ import com.enums.Waits;
 import com.factories.WaitFactory;
 import com.github.javafaker.Faker;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.pagecomponents.DaySelectionComponents;
 import com.pagecomponents.DurationComponents;
-import org.apache.commons.lang3.Range;
+import com.pagecomponents.OLPNumberComponents;
+import com.pagecomponents.OlpComponents;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.SourceType;
-import org.testng.IRetryAnalyzer;
-
 
 import java.time.Duration;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class SchoolPage extends BasePage {
     private final By SCHOOL_LIST = By.xpath("//a[contains(@id,'school')]");
@@ -43,26 +44,38 @@ public class SchoolPage extends BasePage {
     private final By Percent = By.xpath("//div[@class='pmd-chart']//span");
     private final By TOOLTIP = By.xpath("//div[@class='tooltip-inner']");
     private final By WEEKLY_OVERVIEW = By.xpath("(//a[@class='nav-link']/span)[1]");
-
-    public static SchoolPage useSchoolPage() {
-        return new SchoolPage();
-    }
+    private final By MONTHS_LIST = By.xpath("(//button[@class='current']//span)[1]");
+    private final By PREVIOUS_MONTH = By.xpath("//button[@class='previous']");
+    private final By NEXT_MONTH = By.xpath("//button[@class='next']");
+    private final By DATES = By.xpath("//span[@class='ng-star-inserted']");
+    private final By APPLY = By.xpath("(//button[normalize-space()='Apply'])[1]");
+    private final String randomRow = "//table[@class='days weeks']/tbody/tr[%s]";
+    private final String randomDay = "//td[%s]/span[@class='ng-star-inserted']";
+   private final By OLP_LIST = By.xpath(" //div[@class='d-inline-flex']");
+   private final By FIRST_ROW_PERCENTAGE = By.xpath("program-blank-state text-mutedno");
+   private final By FIRST_SCHOOL = By.xpath("(//a[contains(@id,'school')])[1]");
+   private final String COLUMN_LIST = "//datatable-body-cell[%s]//*[self::span[contains(text(), '%')] or self::div[@class='program-blank-state text-muted']]";
 
     static int optionsIndex = 0;
     int numberOfSchool = 0;
     List<String> percentageText = new ArrayList<>();
     List<String> percentageTextOnClass = new ArrayList<>();
+    List<WebElement> percentangeList = new ArrayList<>();
+    List<Integer> percentListText = new ArrayList<>();
+
+    public static SchoolPage useSchoolPage() {
+        return new SchoolPage();
+    }
 
     public SchoolPage clickRandomSchool() {
         numberOfSchool = WaitFactory.waitForElements(SCHOOL_LIST, Waits.PRESENCE).size();
-        optionsIndex = new Faker().random().nextInt(1, numberOfSchool);
-        System.out.println("Random school number --" + optionsIndex);
+        optionsIndex = new Faker().random().nextInt(0, numberOfSchool - 1);
+
         List<WebElement> listOfPercentages = generateDynamicElements(ROW_PERCENTAGE_LIST, String.valueOf(optionsIndex));
         listOfPercentages.forEach(ele -> percentageText.add(ele.getText()));
         WebElement randomSchool = generateDynamicElement(dynamicSchoolList, String.valueOf(optionsIndex));
         Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5));
         click(randomSchool, Waits.PRESENCE, "School--");
-        System.out.println("Random School Name : " + randomSchool);
         return this;
     }
 
@@ -90,7 +103,7 @@ public class SchoolPage extends BasePage {
 
         clickUsingAction(CHECKBOX_PROGRESS_RANGE, Waits.NONE, "Progress Range");
         clearTextBox(TXT_MIN_VALUE, Waits.CLICKABLE);
-        sendKeys(TXT_MIN_VALUE, Waits.NONE, String.valueOf(minValue), "Minimun Value");
+        sendKeys(TXT_MIN_VALUE, Waits.NONE, String.valueOf(minValue), "Minimum Value");
         Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(3));
         clearTextBox(TXT_MAX_VALUE, Waits.NONE);
         sendKeys(TXT_MAX_VALUE, Waits.NONE, String.valueOf(maxValue), "Maximum Value");
@@ -109,7 +122,6 @@ public class SchoolPage extends BasePage {
         System.out.println("Amount " + amount);
         Action action = move.dragAndDropBy(getElement(LEFT_SLIDER, Waits.CLICKABLE), amount, 0).build();
         action.perform();
-
 
         Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5));
         int amountRight = getPixelsToMoveRight(getElement(RIGHT_SLIDER, Waits.NONE), 30, 100, 1);
@@ -137,8 +149,6 @@ public class SchoolPage extends BasePage {
         return this;
     }
 
-    List<WebElement> percentangeList = new ArrayList<>();
-    List<Integer> percentListText = new ArrayList<>();
 
     public boolean getRangePercentage() {
         percentangeList = getElements(LIST_OF_RANGE_PERCENTAGE, Waits.PRESENCE);
@@ -180,9 +190,54 @@ public class SchoolPage extends BasePage {
             }
 
         }
-        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(12));
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5));
         return true;
     }
+    public SchoolPage selectCustomRange(DurationComponents customRange, String month, DaySelectionComponents day) {
+
+        click(DURATION, Waits.PRESENCE, "Duration");
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5));
+        click(generateDynamicByLocator(list_Duration, customRange.getDuration()), Waits.PRESENCE, "Custom Range");
+        String firstMonth = getElements(MONTHS_LIST, Waits.PRESENCE).get(0).getText();
+        while (!month.equals(firstMonth)) {
+            click(PREVIOUS_MONTH, Waits.PRESENCE, "Previous Month");
+            firstMonth = getElements(MONTHS_LIST, Waits.PRESENCE).get(0).getText();
+        }
+        int randomRowNumber = new Faker().random().nextInt(2, 4);
+        WebElement startDate = generateDynamicElement(randomRow, String.valueOf(randomRowNumber));
+        WebElement monday = startDate.findElement(By.xpath(".//td[1]/span[@class='ng-star-inserted']"));
+        click(monday, Waits.PRESENCE, "Start Date");
+
+        WebElement endDate = generateDynamicElement(randomRow, String.valueOf(randomRowNumber));
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(10));
+        WebElement sunday = endDate.findElement(By.xpath(".//td[7]/span[@class='ng-star-inserted']"));
+
+        click(sunday, Waits.PRESENCE, "End Date");
+        return this;
+    }
+    public SchoolPage sortSchoolAsPerPerformance(){
+        List<WebElement> OLPNames = getElements(OLP_LIST,Waits.PRESENCE); // [web1, web2]
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5)); // sleep 5sec
+
+        for (WebElement olpName:OLPNames) {
+            System.out.println("OLP Name---"+olpName.getText());
+            if(olpName.getText().equals(olp)){
+                olpName.click();
+            }
+        }
+        Uninterruptibles.sleepUninterruptibly(Duration.ofSeconds(5));
+
+
+//        for (int i = 0; i < OLPName.size(); i++) {
+//            OLPName.get(i).click();
+//            List<WebElement> li = getElements(FIRST_ROW_PERCENTAGE,Waits.PRESENCE); // 1
+//            s.add(li.get(i).getText());
+//        }
+//            System.out.println("School percentage --"+ s);
+
+        return this;
+    }
 }
+
 
 

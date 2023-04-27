@@ -27,13 +27,13 @@ public class HomeTests extends BaseTest {
     }
 
     @Test(dataProvider = "getDataFromExcel",dataProviderClass = SupplierReader.class)
-    @TestDescription(description = "To test school is clicked",author = Author.ANKITA,category = Category.SANITY)
+    @TestDescription(description = "To test navigation path",author = Author.ANKITA,category = Category.SANITY)
     void testVerifySchoolNavigation(TestDataSupplier dataSupplier){
         useLoginPage().clickOnCleverBtn()
                 .performLogin(dataSupplier.getUsername(),dataSupplier.getPassword());
         HomePage.useHomePage()
                 .clickOnSchools(SidemenuComponents.SCHOOLS);
-        boolean flag = HomePage.useHomePage().verifySchoolsNavigation(dataSupplier.getSchools());
+        boolean flag = HomePage.useHomePage().verifySchoolsNavigation(SidemenuComponents.SCHOOLS);
         validate(flag,true,"Navigation Shows correctly");
     }
 }

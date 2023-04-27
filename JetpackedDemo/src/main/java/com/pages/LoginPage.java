@@ -16,10 +16,15 @@ public class LoginPage extends BasePage {
     private final By DROP_DOWN_DISTRICT = By.xpath("//div[@class='ng-input']");
     private final String DROP_DOWN_DISTRICT_LIST = "//span[contains(normalize-space(),'%s')]";
     private final By BTN_LOGIN = By.xpath("//button[@id='submitLogin']");
-    private final By LBL_USER_NAME = By.xpath("//div[@class='media-body']/h5");
     private final By TXT_WELCOME = By.xpath("//button[@id='burgerMenuId']/following::h1[1]");
 
     public static LoginPage useLoginPage() {
+        return new LoginPage();
+    }
+    public static LoginPage first() {
+        return new LoginPage();
+    }
+    public static LoginPage then() {
         return new LoginPage();
     }
 
